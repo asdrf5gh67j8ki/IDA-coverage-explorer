@@ -1,0 +1,36 @@
+name: test-and-package
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [windows-2022, ubuntu-24.04, macos-15, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-preview.txt
+      - run: python -m pip install -r requirements-preview.txt
+      - run: python -m unittest discover -s tests -v
+      - name: Check installer destination
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .\install.ps1 -Plugins (Join-Path $env:RUNNER_TEMP 'coverage-plugins')
+          if (-not (Test-Path (Join-Path $env:RUNNER_TEMP 'coverage-plugins\coverage_explorer.py'))) { throw 'Loader was not installed.' }
+      - run: python tools/package.py
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows'
+        with:
+          name: coverage-explorer
+          path: dist/*
