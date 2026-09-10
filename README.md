@@ -9,4 +9,4 @@ You can compare runs as well. B - A shows code seen in B but not A. Useful for f
 
 On Windows, run `install.ps1`, restart IDA, then press `Ctrl+Alt+C` to import your log. Double-click a function to jump to it.
 
-![docs/interface.png]
+![Coverage Explorer interface](docs/interface.png)
