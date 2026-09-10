@@ -8,3 +8,5 @@ It doesn't record execution itself. You need a log from something like DynamoRIO
 You can compare runs as well. B - A shows code seen in B but not A. Useful for finding what gets reached when you do something different in a program.
 
 On Windows, run `install.ps1`, restart IDA, then press `Ctrl+Alt+C` to import your log. Double-click a function to jump to it.
+
+![docs/interface.png]
